@@ -1,6 +1,7 @@
 import socket
 import sys
 import subprocess
+import os
 
 
 # Create a socket object
@@ -32,8 +33,8 @@ while True:
             break  # Client has disconnected
         elif command == 'ls':
             # List files on the server
-            files = subprocess.getstatusoutput('ls -l')
-            c.send('\n'.join(files[1:]).encode('utf-8'))
+            files = os.listdir()
+            c.send('\n'.join(files).encode('utf-8'))
         elif command.startswith('get '):
             # Send file to the client
             filename = command[4:]
