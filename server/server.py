@@ -39,14 +39,20 @@ while True:
             filename = command[4:]
             try:
                 with open(filename, 'rb') as f:
+                    print('Sending file!')
                     c.send(f.read())
             except FileNotFoundError:
                 c.send(b'File not found')
         elif command.startswith('put '):
             # Receive file from the client
+            buffer = c.recv(BUFFER_SIZE)
+            if buffer == b'File not found':
+                continue
+
             filename = command[4:]
             with open(filename, 'wb') as f:
-                f.write(c.recv(BUFFER_SIZE))
+                print('Recieving file!')
+                f.write(buffer)
         elif command == 'quit':
             break  # Client has requested to disconnect
 

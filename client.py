@@ -27,9 +27,14 @@ while True:
         print(s.recv(BUFFER_SIZE).decode('utf-8'))
     elif command.startswith('get '):
         # Receive file from the server
+        buffer = s.recv(BUFFER_SIZE)
+        if buffer == b'File not found':
+            print("File not found on server.")
+            continue
+
         filename = command[4:]
         with open(filename, 'wb') as f:
-            f.write(s.recv(BUFFER_SIZE))
+            f.write(buffer)
     elif command.startswith('put '):
         # Send file to the server
         filename = command[4:]
@@ -37,7 +42,7 @@ while True:
             with open(filename, 'rb') as f:
                 s.send(f.read())
         except FileNotFoundError:
-            print('File not found')
+            print('File not found.')
 
 # Close the connection
 s.close()
