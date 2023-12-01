@@ -1,5 +1,6 @@
 import socket
 import sys
+import os
 
 # Create a socket object
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -35,6 +36,7 @@ while True:
         filename = command[4:]
         with open(filename, 'wb') as f:
             f.write(buffer)
+        print("File: " + filename + "\nSize (in bytes): " + str(os.stat(filename).st_size))
     elif command.startswith('put '):
         # Send file to the server
         filename = command[4:]
@@ -43,6 +45,7 @@ while True:
                 s.send(f.read())
         except FileNotFoundError:
             print('File not found.')
+        print("File: " + filename + "\nSize (in bytes): " + str(os.stat(filename).st_size))
 
 # Close the connection
 s.close()
