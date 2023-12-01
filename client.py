@@ -42,7 +42,7 @@ while True:
         dataSocket = data_client(s)
         filename = command[4:]
         with open(filename, 'wb') as f:
-            f.write(buffer)
+            f.write(dataSocket.recv(BUFFER_SIZE))
         print("File: " + filename + "\nSize (in bytes): " + str(os.stat(filename).st_size))
     elif command.startswith('put '):
         # Send file to the server
@@ -56,6 +56,7 @@ while True:
             print('File not found.')
             s.send(b"File not found")
             continue
+        print("File: " + filename + "\nSize (in bytes): " + str(os.stat(filename).st_size))
         dataSocket = data_client(s)
         dataSocket.send(fileData)
         dataSocket.close
