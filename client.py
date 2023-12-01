@@ -14,6 +14,13 @@ BUFFER_SIZE = 1024
 # Connect to the server on local computer
 s.connect((server_machine, port))
 
+def data_client(s):
+    dataPort = s.recv(BUFFER_SIZE).decode('utf-8')
+    dataSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    dataSocket.connect((server_machine, int(dataPort)))
+
+    return dataSocket
+
 while True:
     # Print ftp prompt
     command = input('ftp> ')
@@ -31,18 +38,25 @@ while True:
         if buffer == b'File not found':
             print("File not found on server.")
             continue
-
+        dataSocket = data_client(s)
         filename = command[4:]
         with open(filename, 'wb') as f:
-            f.write(buffer)
+            f.write(dataSocket.recv(BUFFER_SIZE))
     elif command.startswith('put '):
         # Send file to the server
         filename = command[4:]
+        fileData = ""
         try:
             with open(filename, 'rb') as f:
-                s.send(f.read())
+                fileData = f.read()
+                s.send(b"File found!")
         except FileNotFoundError:
             print('File not found.')
+            s.send(b"File not found")
+            continue
+        dataSocket = data_client(s)
+        dataSocket.send(fileData)
+        dataSocket.close
 
 # Close the connection
 s.close()
