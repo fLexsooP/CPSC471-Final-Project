@@ -1,7 +1,10 @@
 import socket
 import sys
 import os
-import ftp
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), './utils'))
+from ftp import send_data, receive_data
+
 # Create a socket object
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -44,7 +47,7 @@ while True:
         filename = command[4:]
         with open(filename, 'wb') as f:
             print('Receiving file!')
-            f.write(ftp.receive_data(dataSocket).encode('utf-8'))
+            f.write(receive_data(dataSocket).encode('utf-8'))
         print("File: " + filename + "\nSize (in bytes): " + str(os.stat(filename).st_size))
     elif command.startswith('put '):
         # Send file to the server
@@ -62,7 +65,7 @@ while True:
         dataSocket = data_client(s)
         # dataSocket.send(fileData)
         # dataSocket.close
-        ftp.send_data(dataSocket, fileData)
+        send_data(dataSocket, fileData)
 
 # Close the connection
 s.close()

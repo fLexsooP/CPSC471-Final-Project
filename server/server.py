@@ -1,8 +1,9 @@
 import socket
 import sys
-import subprocess
 import os
-import ftp
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../utils'))
+from ftp import send_data, receive_data
 
 # Create a socket object
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -56,7 +57,7 @@ while True:
                 c.send(b'File not found')
                 continue
             dataSender = data_server(c)
-            ftp.send_data(dataSender, fileData)
+            send_data(dataSender, fileData)
         elif command.startswith('put '):
             # Receive file from the client
             buffer = c.recv(BUFFER_SIZE)
@@ -67,7 +68,7 @@ while True:
             filename = command[4:]
             with open(filename, 'wb') as f:
                 print('Recieving file!')
-                f.write(ftp.receive_data(dataReciever).encode('utf-8'))
+                f.write(receive_data(dataReciever).encode('utf-8'))
             dataReciever.close
         elif command == 'quit':
             break  # Client has requested to disconnect
