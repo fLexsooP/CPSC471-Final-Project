@@ -52,14 +52,17 @@ while True:
             try:
                 with open(filename, 'rb') as f:
                     fileData = f.read()
-                    c.send(b'File ok!')
+                c.send(b'200 PORT command successful.')
             except FileNotFoundError:
-                c.send(b'File not found')
+                c.send(b"550 NO SUCH FILE")
+                print("\"get " + filename + "\" COMMAND FAIL NO SUCH FILE")
                 continue
             dataSender = data_server(c)
             send_data(dataSender, fileData)
+            c.send(b"226 Tranfer complete")
+            print("\"get " + filename + "\" COMMAND SUCCESS")
         elif command.startswith('put '):
-            # Receive file from the client
+ # Receive file from the client
             buffer = c.recv(BUFFER_SIZE)
             print(buffer)
             if buffer == b'File not found':
@@ -70,7 +73,10 @@ while True:
                 print('Recieving file!')
                 f.write(receive_data(dataReciever).encode('utf-8'))
             dataReciever.close
+            print("\"put " + filename + "\" COMMAND SUCCESS")
         elif command == 'quit':
+            c.send(b'221 Goodbye')
+            print("CLIENT EXIT")
             break  # Client has requested to disconnect
 
     # Close the connection with the client

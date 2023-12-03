@@ -33,6 +33,7 @@ while True:
         continue
     s.send(command.encode('utf-8'))
     if command == 'quit':
+        print(s.recv(BUFFER_SIZE).decode('utf-8'))
         break  # Disconnect from the server
     elif command == 'ls':
         # List files on the server
@@ -40,14 +41,19 @@ while True:
     elif command.startswith('get '):
         # Receive file from the server
         buffer = s.recv(BUFFER_SIZE)
-        if buffer == b'File not found':
-            print("File not found on server.")
+        # Check if there is a file
+        if buffer.startswith(b'550'):
+            print(buffer.decode('utf-8'))
             continue
+        # Get file and store
         dataSocket = data_client(s)
         filename = command[4:]
         with open(filename, 'wb') as f:
-            print('Receiving file!')
+            print(buffer.decode('utf-8'))
             f.write(receive_data(dataSocket).encode('utf-8'))
+        # Wait for tranfer complete
+        buffer = s.recv(BUFFER_SIZE)
+        print(buffer.decode('utf-8'))
         print("File: " + filename + "\nSize (in bytes): " + str(os.stat(filename).st_size))
     elif command.startswith('put '):
         # Send file to the server
@@ -66,6 +72,7 @@ while True:
         # dataSocket.send(fileData)
         # dataSocket.close
         send_data(dataSocket, fileData)
+        
 
 # Close the connection
 s.close()
