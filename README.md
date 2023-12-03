@@ -3,10 +3,10 @@
 ## Group Members
 
 - Chence Shi - <chenceshi@csu.fullerton.edu>
-- member2 - <email>
+- Ryan Agundez - <ragundez@csu.fullerton.edu>
 - Andres Gallego - <andresgallego@csu.fullerton.edu>
 - Phong Nguyen - <phongnguyen887@csu.fullerton.edu>
-- member5 - <email>
+- Quinn Schulte - <quinn.schulte@csu.fullerton.edu>
 
 ## Description
 

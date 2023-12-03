@@ -21,9 +21,11 @@ s.bind(('', port))
 s.listen(5)
 print('Server is listening on port:', port)
 
+#Creating the server-side data connection
 def data_server(c):
     dataSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     dataSocket.bind(('', 0))
+    #Sending chosen port to client
     c.send(str(dataSocket.getsockname()[1]).encode('utf-8'))
     dataSocket.listen(5)
     accptedSocket, dataAddr = dataSocket.accept()
@@ -63,20 +65,21 @@ while True:
                 continue
             dataSender = data_server(c)
             send_data(dataSender, fileData)
+            dataSender.close()
             c.send(b"226 Tranfer complete")
             print("\"get " + filename + "\" COMMAND SUCCESS")
         elif command.startswith('put '):
- # Receive file from the client
+            # Receive file from the client
             buffer = c.recv(BUFFER_SIZE)
             print(buffer)
-            if buffer == b'File not found':
+            if buffer.startswith(b'550'):
                 continue
             dataReciever = data_server(c)
             filename = command[4:]
             with open(filename, 'wb') as f:
                 print('Recieving file!')
                 f.write(receive_data(dataReciever).encode('utf-8'))
-            dataReciever.close
+            dataReciever.close()
             print("\"put " + filename + "\" COMMAND SUCCESS")
         elif command == 'quit':
             c.send(b'221 Goodbye')
