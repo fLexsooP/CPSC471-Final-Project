@@ -4,7 +4,7 @@
 
 - Chence Shi - <chenceshi@csu.fullerton.edu>
 - member2 - <email>
-- member3 - <email>
+- Andres Gallego - <andresgallego@csu.fullerton.edu>
 - member4 - <email>
 - member5 - <email>
 
