@@ -5,7 +5,7 @@
 - Chence Shi - <chenceshi@csu.fullerton.edu>
 - member2 - <email>
 - Andres Gallego - <andresgallego@csu.fullerton.edu>
-- member4 - <email>
+- Phong Nguyen - <phongnguyen887@csu.fullerton.edu>
 - member5 - <email>
 
 ## Description
