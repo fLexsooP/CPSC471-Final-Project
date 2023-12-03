@@ -44,7 +44,11 @@ while True:
         elif command == 'ls':
             # List files on the server
             files = os.listdir()
-            c.send('\n'.join(files).encode('utf-8'))
+            if not files: 
+                c.send(b"550 NO SUCH FILE")
+            else:    
+                c.send('\n'.join(files).encode('utf-8'))
+            print("\"ls\" COMMAND SUCCESS")
         elif command.startswith('get '):
             # Send file to the client
             filename = command[4:]
